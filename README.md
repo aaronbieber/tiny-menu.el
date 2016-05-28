@@ -1,5 +1,7 @@
 # Tiny Menu #
 
+[![MELPA](http://melpa.org/packages/tiny-menu-badge.svg)](http://melpa.org/#/tiny-menu)
+
 Tiny Menu gives you the ability to define any number of menus that can be
 presented on demand in the minibuffer. The net effect would be similar to
 defining various prefix commands and using a package like `which-key` or
