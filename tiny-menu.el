@@ -109,4 +109,4 @@ declaration now looks like:
      (tiny-menu ,item)))
 
 (provide 'tiny-menu)
-;;; tiny-menu ends here
+;;; tiny-menu.el ends here
