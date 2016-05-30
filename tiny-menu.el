@@ -65,7 +65,7 @@ is displayed."
       (message "Configure tiny-menu-items first.")
     (let* ((menu (if (assoc menu tiny-menu-items)
                      (cadr (assoc menu tiny-menu-items))
-                   (air-menu-of-menus)))
+                   (tiny-menu--menu-of-menus)))
            (title (car menu))
            (items (append (cadr menu)
                           '((?q "Quit" nil))))
@@ -84,7 +84,7 @@ is displayed."
                (funcall (nth 2 (assoc choice items)))
              (message "Menu aborted.")))))
 
-(defun air-menu-of-menus ()
+(defun tiny-menu--menu-of-menus ()
   "Build menu items for all configured menus.
 
 This allows `tiny-menu' to display an interactive menu of all
