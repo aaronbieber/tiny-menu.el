@@ -1,4 +1,5 @@
 ;;; tiny-menu.el --- Run a selected command from one menu.
+;;; -*- lexical-binding: t -*-
 
 ;; Copyright (c) 2016 Aaron Bieber
 
@@ -96,7 +97,7 @@ explicitly."
                   (setq menu-key-char (1+ menu-key-char))))
               tiny-menu-items))))
 
-(defmacro tiny-menu-run-item (item)
+(defun tiny-menu-run-item (item)
   "Return a function suitable for binding to call the ITEM run menu.
 
 This saves you the trouble of putting inline lambda functions in all
@@ -104,9 +105,10 @@ of the key binding declarations for your menus.  A key binding
 declaration now looks like:
 
 `(define-key some-map \"<key>\" (tiny-menu-item \"my-menu\"))'."
-  `(lambda ()
-     (interactive)
-     (tiny-menu ,item)))
+  (let ((menu-item item))
+    (lambda ()
+      (interactive)
+      (tiny-menu item))))
 
 (provide 'tiny-menu)
 ;;; tiny-menu.el ends here
