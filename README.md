@@ -25,7 +25,7 @@ your choice; I use John Wiegley's `use-package` macro, like this:
 ## Usage ##
 
 To use the tiny menu, simply define the `tiny-menu-items` variable and then map
-keys to the items using the `tiny-menu-run-item` macro.
+keys to the items using the `tiny-menu-run-item` function.
 
 `tiny-menu-items` is an alist of menus ("items") where each menu key is the name
 of the menu and its value is the menu contents.  The menu contents is a list
@@ -51,11 +51,11 @@ available menus using alphabetical prompt keys.  Calling `tiny-menu` with the
 name of a menu will launch that specific menu.
 
 If you want to add a key mapping for a specific menu, you can use the
-`tiny-menu-run-item` macro, like this:
+`tiny-menu-run-item` function, like this:
 
 `(define-key some-map (kbd "<key>") (tiny-menu-run-item "buffer-menu"))`
 
-The macro returns an anonymous interactive function suitable for key binding.
+The function returns an anonymous interactive function suitable for key binding.
 
 It may also be useful (though not required) to use a custom prefix key if all of
 the menus are related.  This is covered in other Emacs documentation, but for
