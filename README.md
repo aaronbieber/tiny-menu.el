@@ -28,20 +28,27 @@ To use the tiny menu, simply define the `tiny-menu-items` variable and then map
 keys to the items using the `tiny-menu-run-item` function.
 
 `tiny-menu-items` is an alist of menus ("items") where each menu key is the name
-of the menu and its value is the menu contents.  The menu contents is a list
-whose car is the name of the menu and cdr is a list of menu items.  Each menu
-item is a list with three elements: the raw character code a user must press to
-select the item, the display name for the item, and the function to be called
-when the item is selected.
+of the menu and its value is the menu contents. The menu contents is a list
+whose car is the name of the menu and cdr is a list of menu items. Each menu
+item is a list with three or four elements: the raw character code a user must
+press to select the item, the display name for the item, the function to be
+called when the item is selected, and (optionally) the menu to which to
+unconditionally transition afterward. A value of "root" signals a transition to
+the menu-of-menus, "quit" quits tiny-menu, and any invalid menu name results in
+in the menu-of-menus.
+
+If `tiny-menu-forever` is non-nil, then any omitted menu transition leaves
+tiny-menu on the current menu. If it is nil, then omitted transitions result in
+a quit.
 
 For example, it might look like this:
 
 ```
 '(("buffer-menu" ("Buffer operations"
-                  ((?k "Kill" kill-this-buffer)
-                   (?b "Bury" bury-buffer))))
+                  ((?k "Kill" kill-this-buffer "buffer-menu")
+                   (?b "Bury" bury-buffer "root"))))
   ("help-menu"   ("Help operations"
-                  ((?f "Describe function" describe-function)
+                  ((?f "Describe function" describe-function "quit")
                    (?k "Describe key"      describe-key)))))
 ```
 
