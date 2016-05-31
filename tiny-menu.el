@@ -1,5 +1,4 @@
 ;;; tiny-menu.el --- Run a selected command from one menu.
-;;; -*- lexical-binding: t -*-
 
 ;; Copyright (c) 2016 Aaron Bieber
 
@@ -66,10 +65,15 @@ The data structure should look like:
 ((\"menu-name-2 (\"\"menu-display-name\" (?z \"First item\" function-to-call-for-item-1 \"transition-menu\")
                  (?x \"Second item\" function-to-call-for-item-2 \"transition-menu\")))))")
 
-(defun tiny-menu--lookup-menu-or-root (menu) 
-  (if (assoc menu tiny-menu-items)
-      (cadr (assoc menu tiny-menu-items))
-    (tiny-menu--menu-of-menus)))
+(defun tiny-menu--lookup-transition (current-menu next-menu)
+  (if (null next-menu)
+      (when tiny-menu-forever current-menu)
+    (cond
+     ((string-equal "quit" next-menu) nil)
+     ((string-equal "root" next-menu) (tiny-menu--menu-of-menus))
+     (t (if (assoc next-menu tiny-menu-items)
+            (cadr (assoc next-menu tiny-menu-items))
+          (tiny-menu--menu-of-menus))))))
 
 (defun tiny-menu (&optional menu)
   "Display the items in MENU and run the selected item.
@@ -78,8 +82,8 @@ If MENU is not given, a dynamically generated menu of available menus
 is displayed."
   (interactive)
   (if (< (length tiny-menu-items) 1)
-      (message "Configure tiny-menu-items first.") 
-    (setq menu (tiny-menu--lookup-menu-or-root menu))
+      (message "Configure tiny-menu-items first.")
+    (setq menu (tiny-menu--lookup-transition nil (if menu menu "root")))
     (while menu 
       (let* ((title (car menu))
              (items (append (cadr menu)
@@ -96,13 +100,7 @@ is displayed."
              (choice (assoc (read-char-choice prompt choices) items))) 
         (when (functionp (nth 2 choice))
           (funcall (nth 2 choice)))
-        (let ((next-menu (nth 3 choice))) 
-          (if (null next-menu) 
-              (unless tiny-menu-forever (setq menu nil))
-            (setq menu (if (string-equal "quit" next-menu) nil
-                         (if (string-equal "root" next-menu)
-                             (tiny-menu--menu-of-menus)
-                           (tiny-menu--lookup-menu-or-root next-menu))))))))
+        (setq menu (tiny-menu--lookup-transition menu (nth 3 choice)))))
     (message "Menu aborted.")))
 
 (defun tiny-menu--menu-of-menus ()
