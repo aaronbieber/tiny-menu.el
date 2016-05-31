@@ -17,7 +17,10 @@ Installing Tiny Menu is no different from installing any other package; place
 the `tiny-menu.el` script in your load path (or add its path to your load path),
 and call `(require 'tiny-menu)`.
 
-Tiny Menu will be available via MELPA soon.
+The recommended method is to install this package from MELPA using the method of
+your choice; I use John Wiegley's `use-package` macro, like this:
+
+`(use-package tiny-menu :ensure t)`
 
 ## Usage ##
 
