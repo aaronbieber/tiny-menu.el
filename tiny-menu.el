@@ -119,9 +119,11 @@ explicitly."
 
 (defun tiny-menu-run-item (item)
   "Return a function suitable for binding to call the ITEM run menu.
+
 This saves you the trouble of putting inline lambda functions in all
 of the key binding declarations for your menus.  A key binding
 declaration now looks like:
+
 `(define-key some-map \"<key>\" (tiny-menu-item \"my-menu\"))'."
   (lambda ()
     (interactive)
