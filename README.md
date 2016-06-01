@@ -34,8 +34,7 @@ item is a list with three or four elements: the raw character code a user must
 press to select the item, the display name for the item, the function to be
 called when the item is selected, and (optionally) the menu to which to
 unconditionally transition afterward. A value of "root" signals a transition to
-the menu-of-menus, "quit" quits tiny-menu, and any invalid menu name results in
-in the menu-of-menus.
+the menu-of-menus, "quit" quits tiny-menu.
 
 If `tiny-menu-forever` is non-nil, then any omitted menu transition leaves
 tiny-menu on the current menu. If it is nil, then omitted transitions result in
@@ -46,7 +45,8 @@ For example, it might look like this:
 ```
 '(("buffer-menu" ("Buffer operations"
                   ((?k "Kill" kill-this-buffer "buffer-menu")
-                   (?b "Bury" bury-buffer "root"))))
+                   (?b "Bury" bury-buffer "root")
+                   (?h "Goto help" nil "help-menu"))))
   ("help-menu"   ("Help operations"
                   ((?f "Describe function" describe-function "quit")
                    (?k "Describe key"      describe-key)))))

@@ -1,4 +1,4 @@
-;;; tiny-menu.el --- Run a selected command from one menu.
+;;; tiny-menu.el --- Display tiny menus. -*- lexical-binding: t -*-
 
 ;; Copyright (c) 2016 Aaron Bieber
 
@@ -55,8 +55,9 @@ then the default is to remain in the current menu. If
 `tiny-menu-forever' is nil, then omitting a new menu results in
 tiny-menu terminating after execution. The special value of
 \"quit\" indicates an unconditional quit from tiny-menu, and the
-value \"root\", and any invalid menu name, indicates an
-unconditional transition to the menu of menus.
+value \"root\" indicates an unconditional transition to the menu
+of menus. tiny-menu will report an error for an invalid
+transition name.
 
 The data structure should look like:
 
@@ -73,7 +74,7 @@ The data structure should look like:
      ((string-equal "root" next-menu) (tiny-menu--menu-of-menus))
      (t (if (assoc next-menu tiny-menu-items)
             (cadr (assoc next-menu tiny-menu-items))
-          (tiny-menu--menu-of-menus))))))
+          (error "The transition menu specified, \"%s\", is not a valid option. Check tiny-menu-items." next-menu))))))
 
 (defun tiny-menu (&optional menu)
   "Display the items in MENU and run the selected item.
@@ -83,7 +84,7 @@ is displayed."
   (interactive)
   (if (< (length tiny-menu-items) 1)
       (message "Configure tiny-menu-items first.")
-    (setq menu (tiny-menu--lookup-transition nil (if menu menu "root")))
+    (setq menu (tiny-menu--lookup-transition nil (or menu "root")))
     (while menu 
       (let* ((title (car menu))
              (items (append (cadr menu)
@@ -118,13 +119,13 @@ explicitly."
 
 (defun tiny-menu-run-item (item)
   "Return a function suitable for binding to call the ITEM run menu.
-
 This saves you the trouble of putting inline lambda functions in all
 of the key binding declarations for your menus.  A key binding
 declaration now looks like:
-
 `(define-key some-map \"<key>\" (tiny-menu-item \"my-menu\"))'."
-  `(lambda () (interactive) (tiny-menu ,item)))
+  (lambda ()
+    (interactive)
+    (tiny-menu item)))
 
 (provide 'tiny-menu)
 ;;; tiny-menu.el ends here
