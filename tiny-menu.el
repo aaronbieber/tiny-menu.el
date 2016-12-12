@@ -38,35 +38,48 @@
   :group 'tiny-menu)
 
 (defvar tiny-menu-forever nil
-  "If menu transitions are omitted, stay within the same menu until quit")
+  "If menu transitions are omitted, stay within the same menu until quit.")
 
 (defvar tiny-menu-items
   '(())
   "An alist of menus.
 
 The keys in the alist are simple strings used to reference the menu in
-calls to `tiny-menu' and the values are lists with four elements:
-a raw character to use as the selection key (such as `?a'), a string to
+calls to `tiny-menu' and the values are lists with four elements: a
+raw character to use as the selection key (such as `?a'), a string to
 use in the menu display, a function to call when that item is
 selected, and a new menu to display once the function has been run.
 
-If the new menu is omitted, and `tiny-menu-forever' is non-nil,
-then the default is to remain in the current menu. If
-`tiny-menu-forever' is nil, then omitting a new menu results in
-tiny-menu terminating after execution. The special value of
-\"quit\" indicates an unconditional quit from tiny-menu, and the
-value \"root\" indicates an unconditional transition to the menu
-of menus. tiny-menu will report an error for an invalid
-transition name.
+If the new menu is omitted, and `tiny-menu-forever' is non-nil, then
+the default is to remain in the current menu.  If `tiny-menu-forever'
+is nil, then omitting a new menu results in tiny-menu terminating
+after execution.  The special value of \"quit\" indicates an
+unconditional quit from tiny-menu, and the value \"root\" indicates an
+unconditional transition to the menu of menus.  tiny-menu will report
+an error for an invalid transition name.
 
 The data structure should look like:
 
-'((\"menu-name-1\" (\"menu-display-name\" (?a \"First item\" function-to-call-for-item-1 \"transition-menu\")
-      (?b \"Second item\" function-to-call-for-item-2 \"transition-menu\")))
-((\"menu-name-2 (\"\"menu-display-name\" (?z \"First item\" function-to-call-for-item-1 \"transition-menu\")
-                 (?x \"Second item\" function-to-call-for-item-2 \"transition-menu\")))))")
+'((\"menu-name-1\" (\"menu-display-name\"
+                     (?a \"First item\"
+                         function-to-call-for-item-1
+                         \"transition-menu\")
+                     (?b \"Second item\"
+                         function-to-call-for-item-2
+                         \"transition-menu\")))
+ ((\"menu-name-2\" (\"menu-display-name\"
+                     (?z \"First item\"
+                         function-to-call-for-item-1
+                         \"transition-menu\")
+                     (?x \"Second item\"
+                         function-to-call-for-item-2
+                         \"transition-menu\")))))")
 
 (defun tiny-menu--lookup-transition (current-menu next-menu)
+  "From CURRENT-MENU, extract the appropriate NEXT-MENU value.
+
+Not all menus have a NEXT-MENU, in which case the resulting value may
+be nil."
   (if (null next-menu)
       (when tiny-menu-forever current-menu)
     (cond
@@ -74,7 +87,8 @@ The data structure should look like:
      ((string-equal "root" next-menu) (tiny-menu--menu-of-menus))
      (t (if (assoc next-menu tiny-menu-items)
             (cadr (assoc next-menu tiny-menu-items))
-          (error "The transition menu specified, \"%s\", is not a valid option. Check tiny-menu-items." next-menu))))))
+          (error (concat "The transition menu specified, \"%s\", is not a valid option, "
+                         "check tiny-menu-items.") (or next-menu "N/A")))))))
 
 (defun tiny-menu (&optional menu)
   "Display the items in MENU and run the selected item.
