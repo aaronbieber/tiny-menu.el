@@ -99,7 +99,7 @@ is displayed."
   (if (< (length tiny-menu-items) 1)
       (message "Configure tiny-menu-items first.")
     (setq menu (tiny-menu--lookup-transition nil (or menu "root")))
-    (while menu 
+    (while menu
       (let* ((title (car menu))
              (items (append (cadr menu)
                             '((?q "Quit" nil "quit"))))
@@ -112,11 +112,16 @@ is displayed."
                                            (nth 1 i)))
                                         items ", ")))
              (choices (mapcar (lambda (i) (nth 0 i)) items))
-             (choice (assoc (read-char-choice prompt choices) items))) 
+             (choice (assoc (read-char-choice prompt choices) items)))
         (when (functionp (nth 2 choice))
-          (funcall (nth 2 choice)))
+          (progn (message "")
+                 (condition-case nil
+                     (call-interactively (nth 2 choice))
+                   ((wrong-type-argument)
+                    (funcall (nth 2 choice))))))
         (setq menu (tiny-menu--lookup-transition menu (nth 3 choice)))))
-    (message "Menu aborted.")))
+    (if (not (current-message))
+        (message "Menu ended."))))
 
 (defun tiny-menu--menu-of-menus ()
   "Build menu items for all configured menus.
