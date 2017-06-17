@@ -7,7 +7,7 @@ presented on demand in the minibuffer. The net effect would be similar to
 defining various prefix commands and using a package like `which-key` or
 `guide-key` to display the available key maps upon pressing each prefix.
 
-![Screenshot](assets/tiny-menu-screenshot.png)
+![Screenshot](/assets/tiny-menu-screenshot.png?raw=true "Screenshot")
 
 Menu items must be triggered by a single key press, and it is up to you whether
 you wish to create a key mapping to trigger the menus, or trigger them in some
