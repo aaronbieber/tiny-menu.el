@@ -90,11 +90,13 @@ be nil."
           (error (concat "The transition menu specified, \"%s\", is not a valid option, "
                          "check tiny-menu-items.") (or next-menu "N/A")))))))
 
-(defun tiny-menu (&optional menu)
+(defun tiny-menu (&optional menu omit-final-msg-p)
   "Display the items in MENU and run the selected item.
 
 If MENU is not given, a dynamically generated menu of available menus
-is displayed."
+is displayed.
+  
+If OMIT-FINAL-MSG-P is given, do not show the message \"Menu ended.\" when finished."
   (interactive)
   (if (< (length tiny-menu-items) 1)
       (message "Configure tiny-menu-items first.")
@@ -120,8 +122,9 @@ is displayed."
                    ((wrong-type-argument)
                     (funcall (nth 2 choice))))))
         (setq menu (tiny-menu--lookup-transition menu (nth 3 choice)))))
-    (if (not (current-message))
-        (message "Menu ended."))))
+    (unless (or omit-final-msg-p
+                (current-message))
+      (message "Menu ended."))))
 
 (defun tiny-menu--menu-of-menus ()
   "Build menu items for all configured menus.
