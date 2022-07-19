@@ -96,7 +96,7 @@ be nil."
 If MENU is not given, a dynamically generated menu of available menus
 is displayed.
   
-If OMIT-FINAL-MSG-P is given, do not show the message \"Menu ended.\" when finished."
+If SILENT is given, do not show the message \"Menu ended.\" when finished."
   (interactive)
   (if (< (length tiny-menu-items) 1)
       (message "Configure tiny-menu-items first.")
@@ -122,7 +122,7 @@ If OMIT-FINAL-MSG-P is given, do not show the message \"Menu ended.\" when finis
                    ((wrong-type-argument)
                     (funcall (nth 2 choice))))))
         (setq menu (tiny-menu--lookup-transition menu (nth 3 choice)))))
-    (unless (or omit-final-msg-p
+    (unless (or silent
                 (current-message))
       (message "Menu ended."))))
 
