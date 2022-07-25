@@ -90,7 +90,7 @@ be nil."
           (error (concat "The transition menu specified, \"%s\", is not a valid option, "
                          "check tiny-menu-items.") (or next-menu "N/A")))))))
 
-(defun tiny-menu (&optional menu omit-final-msg-p)
+(defun tiny-menu (&optional menu silent)
   "Display the items in MENU and run the selected item.
 
 If MENU is not given, a dynamically generated menu of available menus
